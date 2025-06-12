@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק חוסרים תזונתיים - אקוסאפ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <svg class="logo" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                <g fill="currentColor">
+                    <!-- eco -->
+                    <circle cx="30" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                    <path d="M 15 40 Q 30 25, 45 40" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                    <circle cx="80" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                    <circle cx="130" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                    <!-- SUPP -->
+                    <text x="170" y="55" font-family="Arial, sans-serif" font-size="45" font-weight="bold" fill="#6B4C3A">SUPP</text>
+                </g>
+                <text x="10" y="75" font-family="Arial, sans-serif" font-size="14" fill="#666" style="letter-spacing: 2px;">מחברים בין מדע לטבע</text>
+            </svg>
+            <h1>בודק חוסרים תזונתיים</h1>
+            <p>גלה אילו תוספי תזונה מתקדמים יכולים לשפר את בריאותך</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro" id="intro">
+                <svg class="intro-logo" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <!-- eco in green -->
+                        <circle cx="30" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                        <path d="M 15 40 Q 30 25, 45 40" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                        <circle cx="80" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                        <circle cx="130" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                        <!-- SUPP in brown -->
+                        <text x="170" y="55" font-family="Arial, sans-serif" font-size="45" font-weight="bold" fill="#6B4C3A">SUPP</text>
+                    </g>
+                    <text x="10" y="75" font-family="Arial, sans-serif" font-size="14" fill="#666" style="letter-spacing: 2px;">מחברים בין מדע לטבע</text>
+                </svg>
+                <h2>ברוכים הבאים לבודק החוסרים התזונתיים של אקוסאפ</h2>
+                <p>כלי זה יעזור לך לזהות חוסרים אפשריים בויטמינים ומינרלים ולגלות את הפתרונות המתקדמים ביותר מבית אקוסאפ.</p>
+                <p><strong>איך זה עובד:</strong></p>
+                <p>• דרג כל סימפטום מ-0 (אין כלל) עד 5 (חמור מאוד)</p>
+                <p>• המערכת תנתח את התשובות שלך ותציג המלצות מותאמות אישית</p>
+                <p>• גלה את התוספים המתקדמים ביותר עם טכנולוגיות ספיגה פורצות דרך</p>
+                <p style="color: #dc3545; font-weight: bold;">⚠️ חשוב: כלי זה אינו מהווה תחליף לייעוץ רפואי. יש להתייעץ עם רופא לפני נטילת תוספי תזונה.</p>
+                <div class="button-container">
+                    <button class="action-btn" onclick="startAssessment()">התחל בדיקה</button>
+                </div>
+            </div>
+            
+            <div class="symptoms-container" id="symptomsContainer">
+                <div class="symptoms-header">
+                    <h2>דרג את הסימפטומים שלך</h2>
+                    <p>עבור על הרשימה ודרג כל סימפטום לפי מידת החומרה</p>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info" id="progressInfo">0 מתוך 0 סימפטומים דורגו</div>
+                
+                <div id="symptomsList"></div>
+                
+                <div class="button-container">
+                    <button class="action-btn" id="calculateBtn" onclick="calculateResults()" disabled>קבל תוצאות</button>
+                </div>
+            </div>
+            
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <svg class="results-logo" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <!-- eco in green -->
+                            <circle cx="30" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                            <path d="M 15 40 Q 30 25, 45 40" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                            <circle cx="80" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                            <circle cx="130" cy="40" r="25" fill="none" stroke="#8BC34A" stroke-width="8"/>
+                            <!-- SUPP in brown -->
+                            <text x="170" y="55" font-family="Arial, sans-serif" font-size="45" font-weight="bold" fill="#6B4C3A">SUPP</text>
+                        </g>
+                        <text x="10" y="75" font-family="Arial, sans-serif" font-size="14" fill="#666" style="letter-spacing: 2px;">מחברים בין מדע לטבע</text>
+                    </svg>
+                    <h2>התוצאות שלך</h2>
+                    <p>על פי הסימפטומים שדירגת, אלו התוספים המומלצים לך מבית אקוסאפ:</p>
+                </div>
+                
+                <div id="resultsList"></div>
+                
+                <div class="button-container">
+                    <button class="action-btn" onclick="resetAssessment()">בצע בדיקה חדשה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
