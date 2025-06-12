@@ -544,8 +544,52 @@ function displayResults(results) {
     const sortedProducts = Object.entries(productRecommendations)
         .sort((a, b) => b[1].score - a[1].score);
     
+    // Add explanation about the order of supplements
+    const orderExplanation = document.createElement('div');
+    orderExplanation.style.cssText = `
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 2px solid #f39c12;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(243, 156, 18, 0.2);
+    `;
+    
+    const explanationTitle = document.createElement('h3');
+    explanationTitle.style.cssText = `
+        color: #e67e22;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+    `;
+    explanationTitle.textContent = '📊 התוספים מסודרים לפי דרגת הנחיצות שלך';
+    
+    const explanationText = document.createElement('p');
+    explanationText.style.cssText = `
+        color: #8b4513;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 10px;
+    `;
+    explanationText.textContent = 'התוספים הבאים מסודרים לפי דרגת החשיבות והנחיצות שלהם עבורך אישית. התוספים שמופיעים ראשונים קיבלו את הציון הגבוה ביותר באבחון, כלומר הם הכי רלוונטיים לסימפטומים שדירגת.';
+    
+    const priorityText = document.createElement('p');
+    priorityText.style.cssText = `
+        color: #d35400;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0;
+    `;
+    priorityText.textContent = '💡 מומלץ להתחיל מהתוסף הראשון - הוא הכי נחוץ לך כרגע!';
+    
+    orderExplanation.appendChild(explanationTitle);
+    orderExplanation.appendChild(explanationText);
+    orderExplanation.appendChild(priorityText);
+    container.appendChild(orderExplanation);
+
     // Display products
-    sortedProducts.forEach(([productName, data]) => {
+    sortedProducts.forEach(([productName, data], index) => {
         const card = document.createElement('div');
         card.className = 'supplement-card';
         
@@ -557,6 +601,64 @@ function displayResults(results) {
         } else {
             card.classList.add('low-priority');
         }
+        
+        // Header with recommendation explanation
+        const recommendationIntro = document.createElement('div');
+        recommendationIntro.className = 'recommendation-intro';
+        recommendationIntro.style.cssText = `
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-right: 4px solid #667eea;
+        `;
+        
+        const introTitle = document.createElement('h3');
+        introTitle.style.cssText = `
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        `;
+        const priorityNumber = index + 1;
+        const priorityEmoji = priorityNumber === 1 ? '🥇' : priorityNumber === 2 ? '🥈' : priorityNumber === 3 ? '🥉' : '⭐';
+        introTitle.textContent = `${priorityEmoji} תוסף מס' ${priorityNumber}: ${productName} מומלץ לך`;
+        
+        const reasonText = document.createElement('p');
+        reasonText.style.cssText = `
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        `;
+        
+        // Create symptoms list for the reason
+        const symptomsForReason = [];
+        const uniqueSymptomsForIntro = {};
+        data.symptoms.forEach(({ symptom, rating }) => {
+            if (!uniqueSymptomsForIntro[symptom] || uniqueSymptomsForIntro[symptom] < rating) {
+                uniqueSymptomsForIntro[symptom] = rating;
+            }
+        });
+        
+        Object.entries(uniqueSymptomsForIntro).slice(0, 3).forEach(([symptom, rating]) => {
+            symptomsForReason.push(symptom);
+        });
+        
+        let priorityMessage = '';
+        if (index === 0) {
+            priorityMessage = '🎯 זהו התוסף החשוב ביותר עבורך! ';
+        } else if (index === 1) {
+            priorityMessage = '📈 תוסף חשוב שני בסדר העדיפויות. ';
+        } else if (index === 2) {
+            priorityMessage = '✨ תוסף משלים חשוב. ';
+        }
+        
+        reasonText.textContent = `${priorityMessage}לפי הסימפטומים שדירגת: ${symptomsForReason.join(', ')} - התוסף הזה יכול לעזור לך להתמודד עם הבעיות הללו ולשפר את מצבך הכללי.`;
+        
+        recommendationIntro.appendChild(introTitle);
+        recommendationIntro.appendChild(reasonText);
+        card.appendChild(recommendationIntro);
         
         // Header
         const header = document.createElement('div');
@@ -570,7 +672,7 @@ function displayResults(results) {
         badge.className = 'score-badge';
         if (data.score >= 20) badge.classList.add('high');
         else if (data.score >= 10) badge.classList.add('medium');
-        badge.textContent = `ציון: ${data.score}`;
+        badge.textContent = `ציון התאמה: ${data.score}`;
         
         header.appendChild(name);
         header.appendChild(badge);
@@ -608,26 +710,115 @@ function displayResults(results) {
         
         const productTitle = document.createElement('h3');
         productTitle.className = 'product-name';
-        productTitle.textContent = `המלצה: ${productName}`;
+        productTitle.style.cssText = `
+            font-size: 1.6rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        `;
+        // Create a more specific title that emphasizes EcoSupp's uniqueness
+        let specificTitle = '';
+        if (productName.includes('ויטמין סי')) {
+            specificTitle = `למה ויטמין הסי הליפוזומלי של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('בי12')) {
+            specificTitle = `למה הבי12 המתקדם של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('ויטמין די3')) {
+            specificTitle = `למה ויטמין הדי3 הטבעוני של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('איירון')) {
+            specificTitle = `למה הברזל המתקדם של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('ביופולייט')) {
+            specificTitle = `למה חומצה הפולית המתקדמת של אקוסאפ מושלמת בשבילך?`;
+        } else if (productName.includes('ליפו מאג')) {
+            specificTitle = `למה המגנזיום הליפוזומלי של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('אומגה 3')) {
+            specificTitle = `למה האומגה 3 הטבעוני של אקוסאפ מושלם בשבילך?`;
+        } else if (productName.includes('בי-קומפליט')) {
+            specificTitle = `למה קומפלקס הבי המתקדם של אקוסאפ מושלם בשבילך?`;
+        } else {
+            specificTitle = `מה היתרונות הייחודיים של ${productName} מבית אקוסאפ?`;
+        }
+        
+        productTitle.textContent = specificTitle;
         recommendation.appendChild(productTitle);
         
         const benefitsContainer = document.createElement('div');
         benefitsContainer.className = 'product-benefits';
         
-        ecosupProducts[productName].benefits.forEach(benefit => {
+        ecosupProducts[productName].benefits.forEach((benefit, index) => {
             const benefitItem = document.createElement('div');
             benefitItem.className = 'benefit-item';
+            benefitItem.style.cssText = `
+                background: white;
+                padding: 18px;
+                margin-bottom: 15px;
+                border-radius: 12px;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+                display: flex;
+                align-items: flex-start;
+                border-right: 3px solid #28a745;
+            `;
             
             const icon = document.createElement('span');
             icon.className = 'benefit-icon';
+            icon.style.cssText = `
+                color: #28a745;
+                font-size: 1.4rem;
+                margin-left: 15px;
+                margin-top: 2px;
+                font-weight: bold;
+            `;
             icon.textContent = '✓';
+            
+            const textContainer = document.createElement('div');
+            textContainer.style.cssText = `
+                flex: 1;
+            `;
+            
+            const benefitTitle = document.createElement('div');
+            benefitTitle.style.cssText = `
+                font-weight: bold;
+                color: #667eea;
+                margin-bottom: 8px;
+                font-size: 1.1rem;
+            `;
             
             const text = document.createElement('div');
             text.className = 'benefit-text';
-            text.textContent = benefit;
+            text.style.cssText = `
+                color: #444;
+                line-height: 1.7;
+                font-size: 1rem;
+            `;
             
+            // Make benefits more marketing-oriented and emphasize EcoSupp's uniqueness
+            let enhancedBenefit = benefit;
+            
+            // Add EcoSupp branding and emphasis
+            enhancedBenefit = enhancedBenefit.replace(/בידלטס|טראקס|קוואטרפוליק/g, (match) => `${match} של אקוסאפ`);
+            enhancedBenefit = enhancedBenefit.replace(/הטכנולוגיה הליפוזומלית/g, 'הטכנולוגיה הליפוזומלית הייחודית של אקוסאפ');
+            enhancedBenefit = enhancedBenefit.replace(/הפורמולה/g, 'הפורמולה הייחודית של אקוסאפ');
+            enhancedBenefit = enhancedBenefit.replace(/לראשונה בישראל/g, 'לראשונה בישראל! אקוסאפ מביאה לכם');
+            enhancedBenefit = enhancedBenefit.replace(/השילוב היחיד בישראל/g, 'השילוב הייחודי שרק אקוסאפ מביאה');
+            
+            // Emphasize the product name
+            enhancedBenefit = enhancedBenefit.replace(productName, `${productName} של אקוסאפ`);
+            
+            // Add benefit titles
+            const benefitTitles = [
+                '🚀 יעילות מקסימלית',
+                '⚡ פעולה מהירה',
+                '💪 חוזק וביטחון',
+                '🌟 איכות פרימיום'
+            ];
+            
+            benefitTitle.textContent = benefitTitles[index] || '✨ יתרון מיוחד';
+            text.textContent = enhancedBenefit;
+            
+            textContainer.appendChild(benefitTitle);
+            textContainer.appendChild(text);
             benefitItem.appendChild(icon);
-            benefitItem.appendChild(text);
+            benefitItem.appendChild(textContainer);
             benefitsContainer.appendChild(benefitItem);
         });
         
@@ -635,9 +826,31 @@ function displayResults(results) {
         
         const ctaButton = document.createElement('button');
         ctaButton.className = 'cta-button';
-        ctaButton.textContent = 'לפרטים נוספים ורכישה';
+        ctaButton.style.cssText = `
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            font-weight: bold;
+            margin-top: 25px;
+            width: 100%;
+        `;
+        ctaButton.textContent = `🛒 רוצה את ${productName} של אקוסאפ? לחץ כאן!`;
+        ctaButton.onmouseover = () => {
+            ctaButton.style.transform = 'translateY(-3px)';
+            ctaButton.style.boxShadow = '0 8px 25px rgba(40, 167, 69, 0.6)';
+        };
+        ctaButton.onmouseout = () => {
+            ctaButton.style.transform = 'translateY(0)';
+            ctaButton.style.boxShadow = '0 6px 20px rgba(40, 167, 69, 0.4)';
+        };
         ctaButton.onclick = () => {
-            alert('כאן ניתן להפנות לדף המוצר או ליצירת קשר');
+            alert(`מעוניין ב-${productName} של אקוסאפ? צור קשר איתנו או בקר באתר אקוסאפ לרכישה!`);
         };
         recommendation.appendChild(ctaButton);
         

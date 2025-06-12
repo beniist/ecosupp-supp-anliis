@@ -33,15 +33,7 @@ body {
     max-width: 200px;
     height: auto;
     margin-bottom: 20px;
-}
-
-.logo text {
-    fill: white !important;
-}
-
-.logo circle,
-.logo path {
-    stroke: white !important;
+    filter: brightness(0) invert(1);
 }
 
 .header h1 {
@@ -75,6 +67,7 @@ body {
     max-width: 120px;
     height: auto;
     opacity: 0.8;
+    filter: brightness(1.2) saturate(1.1);
 }
 
 .intro h2 {
@@ -255,6 +248,7 @@ body {
     height: auto;
     margin-bottom: 15px;
     opacity: 0.9;
+    filter: brightness(1.1) saturate(1.1);
 }
 
 .results-header h2 {
