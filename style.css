@@ -53,11 +53,12 @@ body {
 
 .intro {
     background: #f0f4ff;
-    padding: 25px;
+    padding: 40px;
     border-radius: 15px;
     margin-bottom: 30px;
     border-right: 5px solid #667eea;
     position: relative;
+    line-height: 1.8;
 }
 
 .intro-logo {
@@ -72,14 +73,39 @@ body {
 
 .intro h2 {
     color: #333;
-    margin-bottom: 15px;
+    margin: 30px 0 20px;
     font-size: 1.8rem;
+    font-weight: bold;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
 }
 
 .intro p {
-    color: #555;
+    color: #444;
     line-height: 1.8;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.intro hr {
+    border: none;
+    border-top: 2px solid #667eea;
+    margin: 30px 0;
+    opacity: 0.3;
+}
+
+.intro strong {
+    color: #333;
+    font-weight: bold;
+}
+
+.intro em {
+    color: #666;
+    font-style: italic;
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.2rem;
 }
 
 .symptoms-container {
