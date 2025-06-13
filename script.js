@@ -857,6 +857,9 @@ function displayResults(results) {
         card.appendChild(recommendation);
         container.appendChild(card);
     });
+
+    // גלילה אוטומטית לראש הדף לאחר הצגת התוצאות
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetAssessment() {
